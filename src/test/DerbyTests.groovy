@@ -1,6 +1,7 @@
 package test
 
 import jwill.deckchair.DerbyAdaptor
+import jwill.deckchair.Deckchair
 /**
  * Created by IntelliJ IDEA.
  * User: jwill
@@ -9,54 +10,54 @@ import jwill.deckchair.DerbyAdaptor
  * To change this template use File | Settings | File Templates.
  */
 class DerbyTests extends GroovyTestCase {
-    def adaptor
+    def derby
 
     void setUp() {
-        adaptor = new DerbyAdaptor([name:'tests'])
+        derby = new Deckchair([name:'tests', adaptor:'derby'])
     }
 
     void tearDown() {
-        adaptor.sql.execute("DROP TABLE tests")
+        derby.nuke()
     }
     void testSave() {
-        adaptor.save([name:'fred',age:15, sex:'M'], null)
-        adaptor.save([name:'john'], null)
-        adaptor.save([name:'kate'], null)
-       assertEquals(adaptor.all().size(),3)
+        derby.save([name:'fred',age:15, sex:'M'], null)
+        derby.save([name:'john'], null)
+        derby.save([name:'kate'], null)
+       assertEquals(derby.all().size(),3)
     }
 
     void testRemove() {
-       def a = adaptor.save([name:'fred'])
-       def b = adaptor.save([name:'john'])
-       def c = adaptor.save([name:'kate'])
+       def a = derby.save([name:'fred'])
+       def b = derby.save([name:'john'])
+       def c = derby.save([name:'kate'])
 
-       adaptor.remove(b.key)
-       assertEquals(adaptor.all().size(),2)
+       derby.remove(b.key)
+       assertEquals(derby.all().size(),2)
 
     }
 
     void testGet() {
-       def a = adaptor.save([name:'fred'])
-       def b = adaptor.save([name:'john'])
-       def c = adaptor.save([name:'kate'])
+       def a = derby.save([name:'fred'])
+       def b = derby.save([name:'john'])
+       def c = derby.save([name:'kate'])
 
-       def d = adaptor.get(b.key)
+       def d = derby.get(b.key)
        assertEquals(b,d)
 
     }
 
     void testBogusGet() {
-       def a = adaptor.get("1234")
+       def a = derby.get("1234")
        assertNull(a)
     }
 
     void testNuke() {
-       def a = adaptor.save([name:'fred'])
-       def b = adaptor.save([name:'john'])
-       def c = adaptor.save([name:'kate'])
+       def a = derby.save([name:'fred'])
+       def b = derby.save([name:'john'])
+       def c = derby.save([name:'kate'])
 
-       adaptor.nuke()
-       def list = adaptor.all()
+       derby.nuke()
+       def list = derby.all()
        assertEquals(list.size(),0)
 
     }

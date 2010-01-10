@@ -20,7 +20,6 @@ class DerbyAdaptor {
             sql.execute(createStmt)
         } catch (SQLException ex) {
             // Table already exists
-            ex.printStackTrace()
         }
 	}
 

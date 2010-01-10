@@ -1,6 +1,5 @@
 package jwill.deckchair
 
-import com.google.gson.Gson
 import org.json.JSONObject
 
 /**
@@ -49,10 +48,10 @@ class AdaptorUtils {
     }
 
     def serialize = {obj ->
-        new Gson().toJson(obj)
+        new JSONObject(obj).toString()
     }
 
     def deserialize = {json ->
-       (new JSONObject(json)).map
+        (new JSONObject(json)).map
     }
 }
