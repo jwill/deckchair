@@ -16,7 +16,7 @@ class DerbyAdaptor {
         this.tableName = props['name']
         
         try {
-            def createStmt = "create table "+tableName+" (id VARCHAR(32) not null PRIMARY KEY, value VARCHAR(100), timestamp bigint)"
+            def createStmt = "create table "+tableName+" (id VARCHAR(36) not null PRIMARY KEY, value VARCHAR(100), timestamp bigint)"
             sql.execute(createStmt)
         } catch (SQLException ex) {
             // Table already exists
@@ -47,7 +47,7 @@ class DerbyAdaptor {
     }
 
     private insert(obj, closure) {
-        def id = (obj.key == null) ? utils.uuid() : obj.key
+        def id = (obj.key == null) ? UUID.randomUUID().toString() : obj.key
         remove(obj.key)
         def data = sql.dataSet(tableName)
         data.add(id: id, value: utils.serialize(obj), timestamp:utils.now())
