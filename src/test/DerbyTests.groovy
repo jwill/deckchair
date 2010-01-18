@@ -46,6 +46,18 @@ class DerbyTests extends GroovyTestCase {
 
     }
 
+
+     void testFind() {
+       def a = derby.save([name:'fred'])
+       def b = derby.save([name:'john'])
+       def c = derby.save([name:'kate'])
+
+       def d = derby.find({it ->
+          it.name.equals('fred')
+       }, null)
+       assertEquals(d.size(),1)
+    }
+
     void testBogusGet() {
        def a = derby.get("1234")
        assertNull(a)

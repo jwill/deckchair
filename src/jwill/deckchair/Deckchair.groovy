@@ -30,11 +30,7 @@ public class Deckchair {
     }
     
     def find(condition, closure) {
-        def all = this.all()
-        all.eachWithIndex { obj, i ->
-            if (is(obj))
-                closure(obj, i)
-        }
+		this.adaptor.find(condition, closure)
     }
     
     def nuke() {

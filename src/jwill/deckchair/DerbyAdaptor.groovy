@@ -82,6 +82,18 @@ class DerbyAdaptor {
             else obj
         } else return null
     }
+
+	def find(condition, closure) {
+		def all = this.all()
+        def found = [ ]
+        all.eachWithIndex { obj, i ->
+            if (condition(obj))
+              found.add(obj)
+        }
+        if (closure)
+          closure(found)
+        else found
+	}
     
     def remove(keyOrObj) {
 		def key = (keyOrObj instanceof String ? keyOrObj : keyOrObj?.key)
