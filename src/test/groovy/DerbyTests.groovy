@@ -1,5 +1,6 @@
 package test
-
+import org.junit.*
+import junit.framework.TestCase
 import jwill.deckchair.DerbyAdaptor
 import jwill.deckchair.Deckchair
 /**
@@ -9,7 +10,7 @@ import jwill.deckchair.Deckchair
  * Time: 10:40:58 PM
  * To change this template use File | Settings | File Templates.
  */
-class DerbyTests extends GroovyTestCase {
+class DerbyTests extends TestCase {
     def derby
 
     void setUp() {
