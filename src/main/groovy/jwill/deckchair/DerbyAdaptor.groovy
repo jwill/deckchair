@@ -7,12 +7,13 @@ import groovy.sql.*
 class DerbyAdaptor {
     Sql sql
     def tableName
+    def classname = 'org.apache.derby.jdbc.EmbeddedDriver'
     def connection = "jdbc:derby:deckchair;create=true"
     def utils = new AdaptorUtils()
     
 	public DerbyAdaptor(props) {
         // Create deckchair instance if it doesn't exist.
-        sql = Sql.newInstance(connection);
+        sql = Sql.newInstance([url:connection, driver:classname]);
         this.tableName = props['name']
         
         try {
