@@ -17,7 +17,7 @@ class DerbyAdaptor {
         this.tableName = props['name']
         
         try {
-            def createStmt = "create table "+tableName+" (id VARCHAR(36) not null PRIMARY KEY, value VARCHAR(100), timestamp bigint)"
+            def createStmt = "create table "+tableName+" (id VARCHAR(36) not null PRIMARY KEY, value LONG VARCHAR, timestamp bigint)"
             sql.execute(createStmt)
         } catch (SQLException ex) {
             // Table already exists
@@ -25,26 +25,7 @@ class DerbyAdaptor {
 	}
 
     def save(obj, closure = null) {
-        if (obj?.key == null) {
             insert(obj, closure)
-        } else {
-            this.get(obj, { results ->
-               if (results != null) {
-                   def id = obj.key
-                   remove(obj.key)
-                   update(id, obj, closure)
-
-               }
-            })
-        }
-    }
-
-    private update(id, obj, closure = null) {
-        sql.executeUpdate("UPDATE ${tableName} SET value=${utils.serialize(obj)}, timestamp=${utils.now()} WHERE id=${id}")
-        if (closure) {
-            obj['key'] = id;
-            closure(obj)
-        }
     }
 
     private insert(obj, closure) {
@@ -97,10 +78,10 @@ class DerbyAdaptor {
 	}
     
     def remove(keyOrObj) {
-		def key = (keyOrObj instanceof String ? keyOrObj : keyOrObj?.key)
-        if (key) {
-            sql.execute("DELETE FROM "+tableName+" WHERE id=\'"+key+"\'")
-        }
+    	def key = (keyOrObj instanceof String ? keyOrObj : keyOrObj?.key)
+			if (key) {
+					sql.execute("DELETE FROM "+tableName+" WHERE id=\'"+key+"\'")
+			}
 	}
     
     def nuke() {

@@ -47,6 +47,14 @@ class DerbyTests extends TestCase {
 
     }
 
+    void testChange() {
+    	def a = derby.save([name:'fred'])
+    	a['name'] ='john'
+    	derby.save(a)
+    	def b = derby.get(a.key)
+    	assertEquals(a.name, b.name)
+    	
+    }
 
      void testFind() {
        def a = derby.save([name:'fred'])
