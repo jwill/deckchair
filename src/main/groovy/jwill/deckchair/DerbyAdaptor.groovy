@@ -1,5 +1,6 @@
 package jwill.deckchair
 
+import org.json.*
 import java.sql.*
 import groovy.sql.*
 
@@ -41,12 +42,12 @@ class DerbyAdaptor {
 
     def all(closure = null) {
         def data = sql.dataSet(tableName)
-        def results = [ ]
+        def results = new JSONArray()
         data.each {
             def raw = it.value
             def obj = utils.deserialize(raw)
             obj.put('id', it.id)
-            results.add(obj)
+            results.put(obj)
         }
 
         if (closure)
@@ -59,18 +60,19 @@ class DerbyAdaptor {
         if (result) {
             def obj = utils.deserialize(result.value)
             obj.key = result.id
+            def r = new JSONObject(obj)
             if (closure)
-                closure(obj)
-            else obj
+                closure(r)
+            else r
         } else return null
     }
 
 	def find(condition, closure) {
 		def all = this.all()
-        def found = [ ]
+        def found = new JSONArray()
         all.eachWithIndex { obj, i ->
             if (condition(obj))
-              found.add(obj)
+              found.put(obj)
         }
         if (closure)
           closure(found)

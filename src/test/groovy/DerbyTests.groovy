@@ -1,5 +1,6 @@
 package test
 import org.junit.*
+import org.json.*
 import junit.framework.TestCase
 import jwill.deckchair.DerbyAdaptor
 import jwill.deckchair.Deckchair
@@ -24,7 +25,7 @@ class DerbyTests extends TestCase {
         derby.save([name:'fred',age:15, sex:'M'], null)
         derby.save([name:'john'], null)
         derby.save([name:'kate'], null)
-       assertEquals(derby.all().size(),3)
+       assertEquals(derby.all().length(),3)
     }
 
     void testRemove() {
@@ -33,7 +34,7 @@ class DerbyTests extends TestCase {
        def c = derby.save([name:'kate'])
 
        derby.remove(b.key)
-       assertEquals(derby.all().size(),2)
+       assertEquals(derby.all().length(),2)
 
     }
 
@@ -43,7 +44,7 @@ class DerbyTests extends TestCase {
        def c = derby.save([name:'kate'])
 
        def d = derby.get(b.key)
-       assertEquals(b,d)
+       assertEquals(new JSONObject(b).toString(),d.toString())
 
     }
 
@@ -61,10 +62,11 @@ class DerbyTests extends TestCase {
        def b = derby.save([name:'john'])
        def c = derby.save([name:'kate'])
 
-       def d = derby.find({it ->
-          it.name.equals('fred')
+       def d = derby.find({array ->
+         	 array.getJSONObject(0).getString("name").equals("fred")
+         
        }, null)
-       assertEquals(d.size(),1)
+       assertEquals(d.length(),1)
     }
 
     void testBogusGet() {
@@ -79,7 +81,7 @@ class DerbyTests extends TestCase {
 
        derby.nuke()
        def list = derby.all()
-       assertEquals(list.size(),0)
+       assertEquals(list.length(),0)
 
     }
 }
