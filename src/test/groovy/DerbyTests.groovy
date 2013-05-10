@@ -4,6 +4,7 @@ import org.json.*
 import junit.framework.TestCase
 import jwill.deckchair.DerbyAdaptor
 import jwill.deckchair.Deckchair
+import java.io.File
 /**
  * Created by IntelliJ IDEA.
  * User: jwill
@@ -15,7 +16,7 @@ class DerbyTests extends TestCase {
     def derby
 
     void setUp() {
-        derby = new Deckchair([name:'tests', adaptor:'derby'])
+        derby = new Deckchair([name:'tests', homeDir:'build/tmp/testing-deckchair', adaptor:'derby'])
     }
 
     void tearDown() {

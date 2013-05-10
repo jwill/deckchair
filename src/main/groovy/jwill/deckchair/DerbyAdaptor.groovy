@@ -13,6 +13,8 @@ class DerbyAdaptor {
     def utils = new AdaptorUtils()
     
 	public DerbyAdaptor(props) {
+        if (props.homeDir != null)
+          connection = "jdbc:derby:"+props.homeDir +";create=true"
         // Create deckchair instance if it doesn't exist.
         sql = Sql.newInstance([url:connection, driver:classname]);
         this.tableName = props['name']
