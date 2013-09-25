@@ -5,13 +5,13 @@ repositories {
 }
 
 dependencies {
-	groovy group: 'org.codehaus.groovy', name: 'groovy', version:'1.8.6'
-	groovy group:'org.json', name:'json', version:'20090211'
-	groovy group:'org.apache.derby', name:'derby',version:'10.8.1.2'
+	compile group: 'org.codehaus.groovy', name: 'groovy', version:'1.8.6'
+	compile group:'org.json', name:'json', version:'20090211'
+	compile group:'org.apache.derby', name:'derby',version:'10.8.1.2'
 	testCompile group: 'junit', name: 'junit', version: '4.8.2'
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.4'
+  gradleVersion = '1.6'
 }
 
