@@ -1,10 +1,11 @@
 package jwill.deckchair
 
+import groovy.util.logging.Log
 import org.json.*
 import java.sql.*
 import groovy.sql.*
 
-
+@Log
 class DerbyAdaptor {
     Sql sql
     def tableName
@@ -76,6 +77,20 @@ class DerbyAdaptor {
                 closure(r)
             }
         }
+    }
+
+    def keys(closure = null) {
+       def results = this.all({ JSONArray array ->
+           def keyList = []
+           for (int i=0; i<array.length(); i++) {
+               def r = array.get(i)
+               log.info(r.toString())
+               keyList.add r.getString("id")
+           }
+           if(closure)
+               closure(keyList)
+           else return keyList
+       })
     }
     
     def get(key, closure = null) {

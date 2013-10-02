@@ -31,6 +31,10 @@ public class Deckchair {
     def each(Closure closure = null) {
         this.adaptor.each(closure)
     }
+
+    def keys(Closure closure = null) {
+        this.adaptor.keys(closure)
+    }
     
     def all(closure = null) {
         this.adaptor.all(closure)

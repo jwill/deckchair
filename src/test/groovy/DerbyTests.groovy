@@ -58,6 +58,16 @@ class DerbyTests extends TestCase {
         assertEquals(array.size(), count)
     }
 
+    void testKeys() {
+        def a = derby.save([name:'fred'])
+        def b = derby.save([name:'john'])
+        def c = derby.save([name:'kate'])
+
+        def expectedList = [a.key, b.key, c.key]
+        def keys = derby.keys()
+        assertEquals(expectedList, keys)
+    }
+
     void testExists() {
         def c = derby.save([name:'kate'])
         derby.exists(c.key, {b ->
