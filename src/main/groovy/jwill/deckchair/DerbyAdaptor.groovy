@@ -28,18 +28,29 @@ class DerbyAdaptor {
 	}
 
     def save(obj, closure = null) {
-            insert(obj, closure)
+        def object = insert(obj)
+        if (closure) {
+            closure(object)
+        } else object
     }
 
-    private insert(obj, closure) {
+    private insert(obj) {
         def id = (obj.key == null) ? UUID.randomUUID().toString() : obj.key
         remove(obj.key)
         def data = sql.dataSet(tableName)
         data.add(id: id, value: utils.serialize(obj), timestamp:utils.now())
         obj.key = id
+        obj
+    }
+
+    def batch(array, closure) {
+        def r = []
+        for (a in array) {
+            r.add insert(a)
+        }
         if (closure) {
-           closure(obj)
-        } else obj
+            closure(r)
+        } else r
     }
 
     def all(closure = null) {
@@ -56,6 +67,16 @@ class DerbyAdaptor {
             closure(results)
         else results
     }
+
+    def each(Closure closure = null) {
+        def records = this.all(null)
+        if (closure) {
+            for (def i = 0; i<records.length(); i++) {
+                def r = records.get(i)
+                closure(r)
+            }
+        }
+    }
     
     def get(key, closure = null) {
         def result = sql.firstRow("SELECT * FROM "+tableName+" WHERE id=\'"+key+"\'")
@@ -67,6 +88,12 @@ class DerbyAdaptor {
                 closure(r)
             else r
         } else return null
+    }
+
+    def exists(key, closure = null) {
+        this.get(key, {r ->
+            closure(r!=null)
+        })
     }
 
 	def find(condition, closure) {

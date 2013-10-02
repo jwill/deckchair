@@ -1,10 +1,11 @@
 package test
+
+import groovy.util.logging.Log
 import org.junit.*
 import org.json.*
 import junit.framework.TestCase
 import jwill.deckchair.DerbyAdaptor
 import jwill.deckchair.Deckchair
-import java.io.File
 /**
  * Created by IntelliJ IDEA.
  * User: jwill
@@ -12,6 +13,7 @@ import java.io.File
  * Time: 10:40:58 PM
  * To change this template use File | Settings | File Templates.
  */
+@Log
 class DerbyTests extends TestCase {
     def derby
 
@@ -37,6 +39,36 @@ class DerbyTests extends TestCase {
        derby.remove(b.key)
        assertEquals(derby.all().length(),2)
 
+    }
+
+    void testBatch() {
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        derby.batch(array)
+        assertEquals(derby.all().length(), 3)
+    }
+
+    void testEach() {
+        def count = 0
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        derby.batch(array)
+        derby.each({obj ->
+            // Count iterations
+            count++
+        })
+        assertEquals(array.size(), count)
+    }
+
+    void testExists() {
+        def c = derby.save([name:'kate'])
+        derby.exists(c.key, {b ->
+            assertEquals(true, b)
+        })
+    }
+
+    void testBogusExists() {
+        derby.exists('x_x', {b ->
+            assertEquals(false, b)
+        })
     }
 
     void testGet() {
