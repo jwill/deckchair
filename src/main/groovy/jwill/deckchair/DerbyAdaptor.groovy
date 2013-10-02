@@ -74,7 +74,7 @@ class DerbyAdaptor {
         if (closure) {
             for (def i = 0; i<records.length(); i++) {
                 def r = records.get(i)
-                closure(r)
+                closure(r,i)
             }
         }
     }

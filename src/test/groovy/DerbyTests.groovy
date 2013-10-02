@@ -51,9 +51,10 @@ class DerbyTests extends TestCase {
         def count = 0
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
         derby.batch(array)
-        derby.each({obj ->
-            // Count iterations
+        derby.each({obj, i ->
             count++
+            log.info(""+i)
+            log.info(obj.toString())
         })
         assertEquals(array.size(), count)
     }
