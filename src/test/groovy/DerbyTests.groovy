@@ -92,6 +92,16 @@ class DerbyTests extends TestCase {
 
     }
 
+    void testMultipleGet() {
+        def a = derby.save([name:'fred'])
+        def b = derby.save([name:'john'])
+        def c = derby.save([name:'kate'])
+
+        def d = derby.get([a.key, b.key])
+        assertEquals([a.key,b.key],d.collect{it.key})
+
+    }
+
     void testChange() {
     	def a = derby.save([name:'fred'])
     	a['name'] ='john'
