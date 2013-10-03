@@ -1,5 +1,3 @@
-package test
-
 import groovy.util.logging.Log
 import org.junit.*
 import org.json.*
@@ -32,9 +30,9 @@ class DerbyTests extends TestCase {
     }
 
     void testRemove() {
-       def a = derby.save([name:'fred'])
+       derby.save([name:'fred'])
        def b = derby.save([name:'john'])
-       def c = derby.save([name:'kate'])
+       derby.save([name:'kate'])
 
        derby.remove(b.key)
        assertEquals(derby.all().length(),2)
@@ -83,9 +81,9 @@ class DerbyTests extends TestCase {
     }
 
     void testGet() {
-       def a = derby.save([name:'fred'])
+       derby.save([name:'fred'])
        def b = derby.save([name:'john'])
-       def c = derby.save([name:'kate'])
+       derby.save([name:'kate'])
 
        def d = derby.get(b.key)
        assertEquals(new JSONObject(b).toString(),d.toString())
@@ -95,7 +93,7 @@ class DerbyTests extends TestCase {
     void testMultipleGet() {
         def a = derby.save([name:'fred'])
         def b = derby.save([name:'john'])
-        def c = derby.save([name:'kate'])
+        derby.save([name:'kate'])
 
         def d = derby.get([a.key, b.key])
         assertEquals([a.key,b.key],d.collect{it.key})
@@ -112,9 +110,9 @@ class DerbyTests extends TestCase {
     }
 
      void testFind() {
-       def a = derby.save([name:'fred'])
-       def b = derby.save([name:'john'])
-       def c = derby.save([name:'kate'])
+       derby.save([name:'fred'])
+       derby.save([name:'john'])
+       derby.save([name:'kate'])
 
        def d = derby.find({array ->
          	 array.getJSONObject(0).getString("name").equals("fred")
@@ -129,9 +127,9 @@ class DerbyTests extends TestCase {
     }
 
     void testNuke() {
-       def a = derby.save([name:'fred'])
-       def b = derby.save([name:'john'])
-       def c = derby.save([name:'kate'])
+       derby.save([name:'fred'])
+       derby.save([name:'john'])
+       derby.save([name:'kate'])
 
        derby.nuke()
        def list = derby.all()
