@@ -1,6 +1,7 @@
 package jwill.deckchair
 
 import groovy.util.logging.Log
+import org.codehaus.groovy.runtime.NullObject
 import org.json.*
 import java.sql.*
 import groovy.sql.*
@@ -143,10 +144,25 @@ class DerbyAdaptor {
         else found
     }
 
-    def remove(keyOrObj) {
-        def key = (keyOrObj instanceof String ? keyOrObj : keyOrObj?.key)
-        if (key) {
-            sql.execute("DELETE FROM " + tableName + " WHERE id=\'" + key + "\'")
+    def remove(keyObjOrArray) {
+        def deleteString = "DELETE FROM "+tableName + " WHERE id = ?"
+        def type = keyObjOrArray.getClass()
+        switch (type) {
+            case NullObject:
+                //noop
+                break
+            case String:
+                sql.execute(deleteString, [keyObjOrArray])
+                break
+            case ArrayList:
+                for (obj in keyObjOrArray) {
+                    sql.execute(deleteString, obj.key)
+                }
+                break
+            case Object:
+                sql.execute(deleteString, [keyObjOrArray.id])
+                break
+
         }
     }
 

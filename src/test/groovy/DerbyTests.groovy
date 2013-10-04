@@ -45,6 +45,13 @@ class DerbyTests extends TestCase {
         assertEquals(derby.all().length(), 3)
     }
 
+    void testRemoveArray() {
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        array = derby.batch(array)
+        derby.remove(array)
+        assertEquals(derby.all().length(), 0)
+    }
+
     void testEach() {
         def count = 0
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
