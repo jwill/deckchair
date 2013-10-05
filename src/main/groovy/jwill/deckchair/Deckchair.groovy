@@ -10,6 +10,8 @@ public class Deckchair {
         def a = props['adaptor'] ? props['adaptor'] : 'derby'
 
         adaptor = adaptors[a].newInstance(props)
+
+        applyPlugins()
     }
     
     def save(obj, closure = null) {
@@ -51,5 +53,9 @@ public class Deckchair {
     def nuke() {
         this.adaptor.nuke()
         this
+    }
+
+    def applyPlugins() {
+        AggregationPlugin.apply(this)
     }
 }
