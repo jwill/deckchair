@@ -26,4 +26,10 @@ class AggregationTests extends TestCase {
         def sum = derby.sum("cost", null)
         assertEquals(sum, 275)
     }
+
+    void testAvg() {
+        derby.batch([[cost:50], [cost:100], [cost:125]])
+        def avg = derby.avg("cost", null)
+        assertEquals(avg, 91.6666666667)
+    }
 }
