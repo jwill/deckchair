@@ -13,6 +13,7 @@ class AggregationPlugin {
         deckchair.metaClass.count = count
         deckchair.metaClass.avg = avg
         deckchair.metaClass.min = min
+        deckchair.metaClass.max = max
     }
 
     static sum = {propertyName, closure ->
@@ -69,6 +70,21 @@ class AggregationPlugin {
         if (closure)
             closure(vals[0])
         else vals[0]
+    }
+
+    static max = {propertyName, closure ->
+        def vals = this.deckchair.adaptor.all({array ->
+            def list = []
+            for (int i=0; i<array.length(); i++) {
+                def obj = array.get(i)
+                list.add obj.get(propertyName)
+            }
+            list
+        })
+        Collections.sort(vals)
+        if (closure)
+            closure(vals[-1])
+        else vals[-1]
     }
 
     // count, min, max, avg

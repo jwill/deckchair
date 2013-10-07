@@ -38,4 +38,10 @@ class AggregationTests extends TestCase {
         def min = derby.min("cost", null)
         assertEquals(min, 50)
     }
+
+    void testMax() {
+        derby.batch([[cost:125], [cost:50], [cost:100]])
+        def max = derby.max("cost", null)
+        assertEquals(max, 125)
+    }
 }
