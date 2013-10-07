@@ -32,4 +32,10 @@ class AggregationTests extends TestCase {
         def avg = derby.avg("cost", null)
         assertEquals(avg, 91.6666666667)
     }
+
+    void testMin() {
+        derby.batch([[cost:100], [cost:50], [cost:125]])
+        def min = derby.min("cost", null)
+        assertEquals(min, 50)
+    }
 }
