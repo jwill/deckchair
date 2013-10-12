@@ -2,7 +2,8 @@ package jwill.deckchair
 
 public class Deckchair {
     def adaptors = [
-        'derby':DerbyAdaptor.class
+        'derby':DerbyAdaptor.class,
+        'flatfile': FlatFileAdaptor.class
     ]
     def adaptor
 
