@@ -21,6 +21,18 @@ class FlatFileTests extends TestCase {
         db.nuke()
     }
 
+    void testFind() {
+        db.save([name:'fred'])
+        db.save([name:'john'])
+        db.save([name:'kate'])
+
+        def d = db.find({o ->
+            o.name.equals("fred")
+
+        }, null)
+        assertEquals(d.length(),1)
+    }
+
     void testNuke() {
         db.save([name:'fred'])
         db.save([name:'john'])

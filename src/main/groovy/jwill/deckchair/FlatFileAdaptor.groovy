@@ -2,6 +2,7 @@ package jwill.deckchair
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import org.json.JSONArray
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,8 +61,21 @@ class FlatFileAdaptor {
 
     }
 
+    def find(condition, closure) {
+        def all = this.all()
+        def found = new JSONArray()
+        all.eachWithIndex { obj, i ->
+            if (condition(obj))
+                found.put(obj)
+        }
+        if (closure)
+            closure(found)
+        else found
+    }
+
     def nuke() {
         db = []
+        saveToFile()
         this
     }
 
