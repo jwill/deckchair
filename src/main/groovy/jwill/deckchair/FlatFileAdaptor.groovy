@@ -57,6 +57,16 @@ class FlatFileAdaptor {
         obj
     }
 
+    def batch(array, closure) {
+        def r = []
+        for (a in array) {
+            r.add insert(a)
+        }
+        if (closure) {
+            closure(r)
+        } else r
+    }
+
     def remove(keyObjOrArray) {
 
     }

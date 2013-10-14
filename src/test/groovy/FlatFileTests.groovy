@@ -28,9 +28,14 @@ class FlatFileTests extends TestCase {
 
         def d = db.find({o ->
             o.name.equals("fred")
-
         }, null)
         assertEquals(d.length(),1)
+    }
+
+    void testBatch() {
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        db.batch(array)
+        assertEquals(db.all().size(), 3)
     }
 
     void testNuke() {
