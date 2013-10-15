@@ -32,6 +32,18 @@ class FlatFileTests extends TestCase {
         assertEquals(d.length(),1)
     }
 
+    void testEach() {
+        def count = 0
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        db.batch(array)
+        db.each({obj, i ->
+            count++
+            log.info(""+i)
+            log.info(obj.toString())
+        })
+        assertEquals(array.size(), count)
+    }
+
     void testBatch() {
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
         db.batch(array)

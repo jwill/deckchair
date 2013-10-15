@@ -71,6 +71,16 @@ class FlatFileAdaptor {
 
     }
 
+    def each(Closure closure = null) {
+        def records = this.all(null)
+        if (closure) {
+            for (def i = 0; i < records.size(); i++) {
+                def r = records.get(i)
+                closure(r, i)
+            }
+        }
+    }
+
     def find(condition, closure) {
         def all = this.all()
         def found = new JSONArray()
