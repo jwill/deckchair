@@ -2,6 +2,7 @@ package jwill.deckchair
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.util.logging.Log
 import org.json.JSONArray
 
 /**
@@ -11,6 +12,7 @@ import org.json.JSONArray
  * Time: 11:02 AM
  * To change this template use File | Settings | File Templates.
  */
+@Log
 class FlatFileAdaptor {
     def db = []
     def file
@@ -79,6 +81,20 @@ class FlatFileAdaptor {
                 closure(r, i)
             }
         }
+    }
+
+    def keys(closure = null) {
+        def results = this.all({ array ->
+            def keyList = []
+            for (int i = 0; i < array.size(); i++) {
+                def r = array.get(i)
+                log.info(r.toString())
+                keyList.add r.("id")
+            }
+            if (closure)
+                closure(keyList)
+            else return keyList
+        })
     }
 
     def find(condition, closure) {

@@ -32,6 +32,16 @@ class FlatFileTests extends TestCase {
         assertEquals(d.length(),1)
     }
 
+    void testKeys() {
+        def a = db.save([name:'fred'])
+        def b = db.save([name:'john'])
+        def c = db.save([name:'kate'])
+
+        def expectedList = [a.key, b.key, c.key]
+        def keys = db.keys()
+        assertEquals(expectedList, keys)
+    }
+
     void testEach() {
         def count = 0
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
