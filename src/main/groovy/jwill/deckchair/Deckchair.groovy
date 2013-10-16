@@ -1,5 +1,7 @@
 package jwill.deckchair
 
+import org.json.JSONArray
+
 public class Deckchair {
     def adaptors = [
         'derby':DerbyAdaptor.class,
@@ -14,17 +16,25 @@ public class Deckchair {
 
         applyPlugins()
     }
-    
+
     def save(obj, closure = null) {
         this.adaptor.save(obj, closure)
     }
 
     def batch(array, closure = null) {
-        this.adaptor.batch(array, closure)
+        def r = []
+        for (a in array) {
+            r.add this.adaptor.insert(a)
+        }
+        if (closure) {
+            closure(r)
+        } else r
     }
 
     def exists(key, closure = null) {
-        this.adaptor.exists(key, closure)
+        this.get(key, { r ->
+            closure(r != null)
+        })
     }
 
     def get(key, closure = null) {
@@ -46,9 +56,17 @@ public class Deckchair {
     def remove(keyOrObj) {
         this.adaptor.remove(keyOrObj)
     }
-    
-    def find(condition, closure) {
-		this.adaptor.find(condition, closure)
+
+    def find(condition, closure = null) {
+        def all = this.all()
+        def found = new JSONArray()
+        all.eachWithIndex { obj, i ->
+            if (condition(obj))
+                found.put(obj)
+        }
+        if (closure)
+            closure(found)
+        else found
     }
     
     def nuke() {

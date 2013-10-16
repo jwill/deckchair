@@ -59,15 +59,7 @@ class FlatFileAdaptor {
         obj
     }
 
-    def batch(array, closure) {
-        def r = []
-        for (a in array) {
-            r.add insert(a)
-        }
-        if (closure) {
-            closure(r)
-        } else r
-    }
+
 
     def remove(keyObjOrArray) {
 
@@ -97,18 +89,6 @@ class FlatFileAdaptor {
         })
     }
 
-    def find(condition, closure) {
-        def all = this.all()
-        def found = new JSONArray()
-        all.eachWithIndex { obj, i ->
-            if (condition(obj))
-                found.put(obj)
-        }
-        if (closure)
-            closure(found)
-        else found
-    }
-
     def nuke() {
         db = []
         saveToFile()
@@ -127,5 +107,35 @@ class FlatFileAdaptor {
         if (closure)
             closure(results)
         else results
+    }
+
+    def get(keyOrArray, closure = null) {
+        def result
+        if (keyOrArray instanceof String)
+            result = db.find {it.id == keyOrArray}
+        else if (keyOrArray instanceof ArrayList) {
+            result = []
+            for (key in keyOrArray) {
+                result.add(db.find{it.id == key})
+            }
+        }
+        if (result instanceof HashMap) {
+            def obj = utils.deserialize(result.value)
+            obj.key = result.id
+            if (closure)
+                closure(obj)
+            else obj
+        } else if (result instanceof ArrayList) {
+            def objs = []
+            for (row in result) {
+                def o = utils.deserialize(row.value)
+                o.key = row.id
+                objs.add(o)
+            }
+            if (closure)
+                for (o in objs)
+                    closure(o)
+            else return objs
+        }
     }
 }

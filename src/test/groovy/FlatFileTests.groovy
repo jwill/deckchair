@@ -54,10 +54,32 @@ class FlatFileTests extends TestCase {
         assertEquals(array.size(), count)
     }
 
+    void testExists() {
+        def c = db.save([name:'kate'])
+        db.exists(c.key, {b ->
+            assertEquals(true, b)
+        })
+    }
+
+    void testBogusExists() {
+        db.exists('x_x', {b ->
+            assertEquals(false, b)
+        })
+    }
+
     void testBatch() {
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
         db.batch(array)
         assertEquals(db.all().size(), 3)
+    }
+
+    void testGet() {
+        db.save([name:'fred'])
+        def b = db.save([name:'john'])
+        db.save([name:'kate'])
+
+        def d = db.get(b.key)
+        assertEquals(b.toString(),d.toString())
     }
 
     void testNuke() {

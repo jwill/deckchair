@@ -45,16 +45,6 @@ class DerbyAdaptor {
         obj
     }
 
-    def batch(array, closure) {
-        def r = []
-        for (a in array) {
-            r.add insert(a)
-        }
-        if (closure) {
-            closure(r)
-        } else r
-    }
-
     def all(closure = null) {
         def data = sql.dataSet(tableName)
         def results = new JSONArray()
@@ -124,24 +114,6 @@ class DerbyAdaptor {
                     closure(o)
             else return objs
         }
-    }
-
-    def exists(key, closure = null) {
-        this.get(key, { r ->
-            closure(r != null)
-        })
-    }
-
-    def find(condition, closure) {
-        def all = this.all()
-        def found = new JSONArray()
-        all.eachWithIndex { obj, i ->
-            if (condition(obj))
-                found.put(obj)
-        }
-        if (closure)
-            closure(found)
-        else found
     }
 
     def remove(keyObjOrArray) {
