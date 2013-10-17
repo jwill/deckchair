@@ -1,6 +1,7 @@
 import groovy.util.logging.Log
 import junit.framework.TestCase
 import jwill.deckchair.Deckchair
+import org.json.JSONObject
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,6 +68,30 @@ class FlatFileTests extends TestCase {
         })
     }
 
+    void testMultipleGet() {
+        def a = db.save([name:'fred'])
+        def b = db.save([name:'john'])
+        db.save([name:'kate'])
+
+        def d = db.get([a.key, b.key])
+        assertEquals([a.key,b.key],d.collect{it.key})
+
+    }
+
+    void testChange() {
+        def a = db.save([name:'fred'])
+        a['name'] ='john'
+        db.save(a)
+        def b = db.get(a.key)
+        assertEquals(a.name, b.name)
+
+    }
+
+    void testBogusGet() {
+        def a = db.get("1234")
+        assertNull(a)
+    }
+
     void testBatch() {
         def array = [[name:'fred'], [name:'john'], [name:'kate']]
         db.batch(array)
@@ -82,6 +107,13 @@ class FlatFileTests extends TestCase {
         assertEquals(b.toString(),d.toString())
     }
 
+    void testSave() {
+        db.save([name:'fred',age:15, sex:'M'], null)
+        db.save([name:'john'], null)
+        db.save([name:'kate'], null)
+        assertEquals(db.all().size(),3)
+    }
+
     void testNuke() {
         db.save([name:'fred'])
         db.save([name:'john'])
@@ -90,5 +122,23 @@ class FlatFileTests extends TestCase {
         db.nuke()
         def list = db.all()
         assertEquals(list.size(),0)
+    }
+
+    void testRemove() {
+        db.save([name:'fred'])
+        def b = db.save([name:'john'])
+        db.save([name:'kate'])
+
+        db.remove(b.key)
+        log.info("testRemove:"+db.all().toString())
+        assertEquals(db.all().size(),2)
+
+    }
+
+    void testRemoveArray() {
+        def array = [[name:'fred'], [name:'john'], [name:'kate']]
+        array = db.batch(array)
+        db.remove(array)
+        assertEquals(db.all().size(), 0)
     }
 }

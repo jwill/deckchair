@@ -3,6 +3,7 @@ package jwill.deckchair
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Log
+import org.codehaus.groovy.runtime.NullObject
 import org.json.JSONArray
 
 /**
@@ -57,12 +58,6 @@ class FlatFileAdaptor {
         db.add([id: id, value:obj, timestamp:utils.now()])
         obj.key = id
         obj
-    }
-
-
-
-    def remove(keyObjOrArray) {
-
     }
 
     def each(Closure closure = null) {
@@ -136,6 +131,28 @@ class FlatFileAdaptor {
                 for (o in objs)
                     closure(o)
             else return objs
+        }
+    }
+
+    def remove(keyObjOrArray) {
+        def type = keyObjOrArray.getClass()
+        switch (type) {
+            case NullObject:
+                //noop
+                break
+            case String:
+                def obj = db.find{it.id == keyObjOrArray}
+                db -= obj
+                break
+            case ArrayList:
+                for (obj in keyObjOrArray) {
+                    db -= db.find{it.id == obj.key}
+                }
+                break
+            case Object:
+                db -= keyObjOrArray
+                break
+
         }
     }
 }
